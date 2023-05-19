@@ -1,112 +1,121 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <title>RandomUser API</title>
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <title>RandomUser API</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
 </head>
+
 <body>
-  <form id="user-form">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required>
-    <br>
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
-    <br>
-    <label for="phone">Phone:</label>
-    <input type="tel" id="phone" name="phone" required>
-    <br>
-    <label for="gender">Gender:</label>
-    <select id="gender" name="gender" required>
-      <option value="male">Male</option>
-      <option value="female">Female</option>
-    </select>
-    <br>
-    <label for="age">Age:</label>
-    <input type="number" id="age" name="age" required>
-    <br>
-    <button type="submit">Add User</button>
-  </form>
+    <form id="user-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" required>
+        <br>
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+        <br>
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required>
+        <br>
+        <button type="submit">Add User</button>
+    </form>
 
-  <table id="user-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Gender</th>
-        <th>Age</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+    <table id="user-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Gender</th>
+                <th>Age</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      // Mendefinisikan URL API
-      const apiUrl = 'https://randomuser.me/api/?results=10';
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Mendefinisikan URL API
+            const apiUrl = 'https://randomuser.me/api/?results=10';
 
-      // Menginisialisasi DataTable
-      const dataTable = $('#user-table').DataTable({
-        columns: [
-          { data: 'name.first', title: 'First Name' },
-          { data: 'email', title: 'Email' },
-          { data: 'phone', title: 'Phone' },
-          { data: 'gender', title: 'Gender' },
-          { data: 'dob.age', title: 'Age' }
-        ]
-      });
+            // Menginisialisasi DataTable
+            const dataTable = $('#user-table').DataTable({
+                columns: [
+                    { data: 'name.first', title: 'First Name' },
+                    { data: 'email', title: 'Email' },
+                    { data: 'phone', title: 'Phone' },
+                    { data: 'gender', title: 'Gender' },
+                    { data: 'dob.age', title: 'Age' }
+                ]
+            });
 
-      // Mengambil data dari API menggunakan AJAX
-      $.ajax({
-        url: apiUrl,
-        method: 'GET',
-        success: function(data) {
-          // Menambahkan data ke DataTable
-          dataTable.rows.add(data.results).draw();
-        },
-        error: function(xhr, status, error) {
-          console.log('Error:', error);
-        }
-      });
+            // Mengambil data dari API menggunakan AJAX
+            $.ajax({
+                url: apiUrl,
+                method: 'GET',
+                success: function (data) {
+                    // Menambahkan data ke DataTable
+                    dataTable.rows.add(data.results).draw();
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error:', error);
+                }
+            });
 
-      // Form Validation
-      $('#user-form').submit(function(event) {
-        event.preventDefault();
+            // Form Validation
+            $('#user-form').submit(function (event) {
+                event.preventDefault();
 
-        // Mendapatkan nilai input dari form
-        const name = $('#name').val();
-        const email = $('#email').val();
-        const phone = $('#phone').val();
-        const gender = $('#gender').val();
-        const age = $('#age').val();
+                // Mendapatkan nilai input dari form
+                const name = $('#name').val();
+                const email = $('#email').val();
+                const phone = $('#phone').val();
+                const gender = $('#gender').val();
+                const age = $('#age').val();
 
-        // Validasi form
-        if (!name || !email || !phone || !gender || !age) {
-          alert('Please fill in all fields.');
-          return;
-        }
-            
-        // Menambahkan baris baru ke DataTable
-        dataTable.row.add({
-          name: { first: name },
-          email: email,
-          phone: phone,
-          gender: gender,
-          dob: { age: age }
-        }).draw();
+                // Validasi form
+                if (!name || !email || !phone || !gender || !age) {
+                    alert('Please fill in all fields.');
+                    return;
+                }
 
-        // Reset form input values
-        $('#name').val('');
-        $('#email').val('');
-        $('#phone').val('');
-        $('#gender').val('');
-        $('#age').val('');
+                const existingUser = dataTable.rows().data().toArray().find(user => user.email === email);
+                if (existingUser) {
+                    alert('User with the same email already exists.');
+                    return;
+                }
 
-        alert('User added successfully!');
-      });
-    });
-  </script>
+                // Menambahkan baris baru ke DataTable
+                dataTable.row.add({
+                    name: { first: name },
+                    email: email,
+                    phone: phone,
+                    gender: gender,
+                    dob: { age: age }
+                }).draw();
+
+                // Reset form input values
+                $('#name').val('');
+                $('#email').val('');
+                $('#phone').val('');
+                $('#gender').val('');
+                $('#age').val('');
+
+                alert('User added successfully!');
+            });
+        });
+    </script>
 </body>
+
 </html>
