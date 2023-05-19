@@ -5,6 +5,28 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
 </head>
 <body>
+  <form id="user-form">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <br>
+    <label for="phone">Phone:</label>
+    <input type="tel" id="phone" name="phone" required>
+    <br>
+    <label for="gender">Gender:</label>
+    <select id="gender" name="gender" required>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+    <br>
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" required>
+    <br>
+    <button type="submit">Add User</button>
+  </form>
+
   <table id="user-table">
     <thead>
       <tr>
@@ -47,6 +69,42 @@
         error: function(xhr, status, error) {
           console.log('Error:', error);
         }
+      });
+
+      // Form Validation
+      $('#user-form').submit(function(event) {
+        event.preventDefault();
+
+        // Mendapatkan nilai input dari form
+        const name = $('#name').val();
+        const email = $('#email').val();
+        const phone = $('#phone').val();
+        const gender = $('#gender').val();
+        const age = $('#age').val();
+
+        // Validasi form
+        if (!name || !email || !phone || !gender || !age) {
+          alert('Please fill in all fields.');
+          return;
+        }
+            
+        // Menambahkan baris baru ke DataTable
+        dataTable.row.add({
+          name: { first: name },
+          email: email,
+          phone: phone,
+          gender: gender,
+          dob: { age: age }
+        }).draw();
+
+        // Reset form input values
+        $('#name').val('');
+        $('#email').val('');
+        $('#phone').val('');
+        $('#gender').val('');
+        $('#age').val('');
+
+        alert('User added successfully!');
       });
     });
   </script>
