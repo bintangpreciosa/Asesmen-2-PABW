@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>RandomUser API</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+</head>
+<body>
+  <table id="user-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Gender</th>
+        <th>Age</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Mendefinisikan URL API
+      const apiUrl = 'https://randomuser.me/api/?results=10';
+
+      // Menginisialisasi DataTable
+      const dataTable = $('#user-table').DataTable({
+        columns: [
+          { data: 'name.first', title: 'First Name' },
+          { data: 'email', title: 'Email' },
+          { data: 'phone', title: 'Phone' },
+          { data: 'gender', title: 'Gender' },
+          { data: 'dob.age', title: 'Age' }
+        ]
+      });
+
+      // Mengambil data dari API menggunakan AJAX
+      $.ajax({
+        url: apiUrl,
+        method: 'GET',
+        success: function(data) {
+          // Menambahkan data ke DataTable
+          dataTable.rows.add(data.results).draw();
+        },
+        error: function(xhr, status, error) {
+          console.log('Error:', error);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
